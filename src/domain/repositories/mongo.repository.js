@@ -14,9 +14,9 @@ try {
   db[c.nameconn].conn = mongoose;
   db[c.nameconn].User = user(mongoose);
 } catch (err) {
+  //TODO: ADD LOGGING LIBRARY
   console.log(err);
   db = null;
 }
 
-//enum_.LogDanger("No hay ninguna base de datos vinculada");
 exports.db = db;

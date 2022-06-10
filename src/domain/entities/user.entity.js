@@ -1,12 +1,7 @@
 module.exports = (db) => {
   let userSchema = new db.Schema({
     userID: String,
-    devices: [
-      {
-        deviceID: String,
-        connected_at: Date,
-      },
-    ],
+    activeDevices: [String],
   });
   return db.model("Users", userSchema);
 };
