@@ -1,0 +1,33 @@
+{
+  "name": "count-active-streams-v1",
+  "version": "1.0.0",
+  "description": "Simple Rest API to count the number of active streams for a given user",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChiromboKenT/count-active-streams.git"
+  },
+  "author": "Kenny Chirombo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ChiromboKenT/count-active-streams/issues"
+  },
+  "homepage": "https://github.com/ChiromboKenT/count-active-streams#readme",
+  "dependencies": {
+    "config-yml": "^0.10.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "mongoose": "^6.3.6",
+    "uuidv4": "^6.2.13"
+  },
+  "devDependencies": {
+    "jest": "^28.1.1",
+    "nodemon": "^2.0.16",
+    "supertest": "^6.2.3"
+  }
+}
