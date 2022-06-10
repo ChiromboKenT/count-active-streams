@@ -8,4 +8,5 @@ module.exports = (db) => {
       },
     ],
   });
+  return db.model("Users", userSchema);
 };
