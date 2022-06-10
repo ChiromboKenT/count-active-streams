@@ -19,19 +19,19 @@ exports.GetAllUserDevices = async (userID) => {
   }
 };
 
-exports.GetUserByID = async (userId) => {
+exports.GetUserByID = async (userID) => {
   try {
-    return await db.connMongo.User.findOne({ userId, IsDelete: false });
+    return await db.connMongo.User.findOne({ userID, IsDelete: false });
   } catch (err) {
     console.log(errorMessage, "GetuserByID = ", err);
     return { err: { code: 123, messsage: err } };
   }
 };
 
-exports.AddUser = async (userId, activeDevices) => {
+exports.AddUser = async (userID, activeDevices) => {
   try {
     const dataToSave = await new db.connMongo.User({
-      userId,
+      userID,
       activeDevices,
       IsDelete: false,
     });
@@ -43,9 +43,9 @@ exports.AddUser = async (userId, activeDevices) => {
   }
 };
 
-exports.DeleteById = async (userId) => {
+exports.DeleteById = async (userID) => {
   try {
-    await db.connMongo.User.findOneAndUpdate({ userId }, { IsDelete: true });
+    await db.connMongo.User.findOneAndUpdate({ userID }, { IsDelete: true });
     return true;
   } catch (err) {
     console.log(errorMessage, "Delete = ", err);
@@ -53,11 +53,11 @@ exports.DeleteById = async (userId) => {
   }
 };
 
-exports.UpdateById = async (userId, activeDevices) => {
+exports.UpdateById = async (userID, activeDevices) => {
   try {
     await db.connMongo.User.findOneAndUpdate(
       {
-        userId,
+        userID,
       },
       {
         activeDevices,

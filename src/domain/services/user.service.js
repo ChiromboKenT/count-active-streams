@@ -50,9 +50,9 @@ exports.GetUserByID = async (req, res) => {
     message = "";
 
   try {
-    const { userId } = req.params;
-    if (!isUuid(userId)) throw new Error("UserID is not valid");
-    const user = await userAdapter.GetUserByID(userId);
+    const { userID } = req.params;
+    if (!isUuid(userID)) throw new Error("UserID is not valid");
+    const user = await userAdapter.GetUserByID(userID);
     if (user) {
       if (user.err) {
         status = httpCode.ERROR;
@@ -95,10 +95,10 @@ exports.AddUser = async (req, res) => {
 
   try {
     const { deviceID } = req.params;
-    const userId = uuid();
+    const userID = uuid();
     const devices = [deviceID];
 
-    const response = await userAdapter.AddUser(userId, devices);
+    const response = await userAdapter.AddUser(userID, devices);
     if (!response) throw new Error("Bad Request");
     if (response.err) {
       status = httpCode.ERROR;
@@ -134,9 +134,9 @@ exports.GetActiveDevices = async (req, res) => {
     message = "";
 
   try {
-    const { userId, deviceID } = req.params;
-    if (!isUuid(userId)) throw new Error("UserID is not valid");
-    const user = await userAdapter.GetUserByID(userId);
+    const { userID, deviceID } = req.params;
+    if (!isUuid(userID)) throw new Error("UserID is not valid");
+    const user = await userAdapter.GetUserByID(userID);
     if (user) {
       if (user.err) {
         status = httpCode.ERROR;
@@ -151,7 +151,7 @@ exports.GetActiveDevices = async (req, res) => {
         message = "GetUserByID response successfull ";
         if (user.activeDevices.length > 2) {
           data["maxActive"] = false;
-          userAdapter.UpdateById(userId, [...user.activeDevices, deviceID]);
+          userAdapter.UpdateById(userID, [...user.activeDevices, deviceID]);
         }
       }
     } else {

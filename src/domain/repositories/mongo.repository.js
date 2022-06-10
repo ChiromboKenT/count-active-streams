@@ -1,6 +1,5 @@
 const { db: config } = require("../../../config");
 const mongoose = require("mongoose");
-const enum_ = require("../../util/magic");
 const user = require("../entities/entity-user");
 
 mongoose.set("useFindAndModify", false);
