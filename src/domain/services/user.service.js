@@ -1,5 +1,5 @@
 const userAdapter = require("../adapter/user.adapter");
-const { isUuid, uuid } = require("uuidv4");
+const { isUuid } = require("uuidv4");
 const httpCode = require("../../util/http-enum");
 
 //TODO: ADD SUPPORT FOR MORE SERVICES
@@ -12,6 +12,7 @@ exports.GetAll = async (req, res) => {
 
   try {
     const users = await userAdapter.GetAllUsers();
+
     if (!users) throw new Error("Bad Request");
     if (users.err) {
       status = httpCode.ERROR;
@@ -20,11 +21,8 @@ exports.GetAll = async (req, res) => {
       statusCode = httpCode.BAD_REQUEST;
     } else {
       statusCode = users.length > 0 ? httpCode.OK : httpCode.NO_CONTENT;
-      data = users.map((d) => ({
-        ...d,
-        maxActive: d.activeDevices.length > 2,
-        deviceCount: d.activeDevices.length,
-      }));
+      data = users;
+
       message = "GetAllUsers response successfull ";
     }
     return res.status(statusCode).json({
@@ -33,7 +31,7 @@ exports.GetAll = async (req, res) => {
       errorCode,
       message,
     });
-  } catch (error) {
+  } catch (err) {
     console.log("err = ", err);
     return res.status(httpCode.INTERNAL_SERVER_ERROR).json({
       status: httpCode.ERROR,
@@ -53,6 +51,7 @@ exports.GetUserByID = async (req, res) => {
     const { userID } = req.params;
     if (!isUuid(userID)) throw new Error("UserID is not valid");
     const user = await userAdapter.GetUserByID(userID);
+
     if (user) {
       if (user.err) {
         status = httpCode.ERROR;
@@ -77,7 +76,7 @@ exports.GetUserByID = async (req, res) => {
       errorCode,
       message,
     });
-  } catch (error) {
+  } catch (err) {
     console.log("err = ", err);
     return res.status(httpCode.INTERNAL_SERVER_ERROR).json({
       status: httpCode.ERROR,
@@ -94,11 +93,10 @@ exports.AddUser = async (req, res) => {
     message = "";
 
   try {
-    const { deviceID } = req.params;
-    const userID = uuid();
-    const devices = [deviceID];
+    const { streamID } = req.body;
+    const streams = [streamID];
 
-    const response = await userAdapter.AddUser(userID, devices);
+    const response = await userAdapter.AddUser(streams);
     if (!response) throw new Error("Bad Request");
     if (response.err) {
       status = httpCode.ERROR;
@@ -117,7 +115,7 @@ exports.AddUser = async (req, res) => {
       errorCode,
       message,
     });
-  } catch (error) {
+  } catch (err) {
     console.log("err = ", err);
     return res.status(httpCode.INTERNAL_SERVER_ERROR).json({
       status: httpCode.ERROR,
@@ -134,7 +132,7 @@ exports.GetActiveDevices = async (req, res) => {
     message = "";
 
   try {
-    const { userID, deviceID } = req.params;
+    const { userID, streamID } = req.params;
     if (!isUuid(userID)) throw new Error("UserID is not valid");
     const user = await userAdapter.GetUserByID(userID);
     if (user) {
@@ -146,12 +144,12 @@ exports.GetActiveDevices = async (req, res) => {
       } else {
         data = user;
         data["maxActive"] = true;
-        data["deviceCount"] = user.activeDevices.length;
+        data["deviceCount"] = user.activeStreams.length;
         statusCode = httpCode.OK;
         message = "GetUserByID response successfull ";
-        if (user.activeDevices.length > 2) {
+        if (user.activeStreams.length < 2) {
           data["maxActive"] = false;
-          userAdapter.UpdateById(userID, [...user.activeDevices, deviceID]);
+          userAdapter.UpdateById(userID, [...user.activeStreams, streamID]);
         }
       }
     } else {
@@ -167,12 +165,11 @@ exports.GetActiveDevices = async (req, res) => {
       errorCode,
       message,
     });
-  } catch (error) {
-    console.log("err = ", err);
+  } catch (err) {
     return res.status(httpCode.INTERNAL_SERVER_ERROR).json({
       status: httpCode.ERROR,
       errorCode: httpCode.CRASH_LOGIC,
-      message: err,
+      message: `${("Error = ", err)}`,
     });
   }
 };
