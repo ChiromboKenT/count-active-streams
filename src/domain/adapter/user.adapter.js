@@ -1,5 +1,4 @@
 const { db } = require("../repositories/mongo.repository");
-const { uuid } = require("uuidv4");
 
 const errorMessage = "Error orm-user.";
 exports.GetAllUsers = async () => {
@@ -32,7 +31,7 @@ exports.GetUserByID = async (userId) => {
 exports.AddUser = async (userId, activeDevices) => {
   try {
     const dataToSave = await new db.connMongo.User({
-      userId: uuid(),
+      userId,
       activeDevices,
       IsDelete: false,
     });

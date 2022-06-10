@@ -1,0 +1,89 @@
+// ERRORS FROM BUSINESS LOGIC
+exports.ERROR_REQUIRED_FIELD = "BL2021";
+exports.ID_NOT_FOUND = "BL2022";
+exports.FAIL_CONVERTED_UUID_TO_STRING = "BL2023";
+exports.NO_CONTENT = "BL2024";
+exports.CRASH_LOGIC = "BL2025";
+
+//COLORS TO SHOW DETAIL IN LOGS
+exports.BLACK_LOG = "\x1b[30m%s\x1b[0m";
+exports.RED_LOG = "\x1b[31m%s\x1b[0m";
+exports.GREEN_LOG = "\x1b[32m%s\x1b[0m";
+exports.YELLOW_LOG = "\x1b[33m%s\x1b[0m";
+exports.BLUE_LOG = "\x1b[34m%s\x1b[0m";
+exports.MAGENTA_LOG = "\x1b[35m%s\x1b[0m";
+exports.CYAN_LOG = "\x1b[36m%s\x1b[0m";
+exports.WHITE_LOG = "\x1b[37m%s\x1b[0m";
+
+//STATUS MESSAGES
+exports.SUCCESS = "success";
+exports.ERROR = "error";
+
+// CODE STATUS
+exports.CONTINUE = 100;
+exports.SWITCHING_PROTOCOLS = 101;
+exports.PROCESSING = 102;
+exports.EARLYHINTS = 103;
+exports.OK = 200;
+exports.CREATED = 201;
+exports.ACCEPTED = 202;
+exports.NO_AUTHORITATIVE = 203;
+exports.NO_CONTENT = 204;
+exports.RESET_CONTENT = 205;
+exports.PARTIAL_CONTENT = 206;
+exports.MULTI_STATUS = 207;
+exports.ALREDY_REPORTED = 208;
+exports.IM_USED = 226;
+exports.MULTIPLE_CHOICES = 300;
+exports.MOVED_PERMANENTLY = 301;
+exports.FOUND = 302;
+exports.SEE_OTHER = 303;
+exports.NOT_MODIFIED = 304;
+exports.USE_PROXY = 305;
+exports.SWITCH_PROXY = 306;
+exports.TEMPORARY_REDIRECT = 307;
+exports.PERMANENT_REDIRECT = 308;
+exports.BAD_REQUEST = 400;
+exports.UNAUTHORIZED = 401;
+exports.PAYMENT_REQUIRED = 402;
+exports.FORBIDDEN = 403;
+exports.NOT_FOUND = 404;
+exports.METHOD_NOT_ALLOWED = 405;
+exports.NOT_ACEPTABLE = 406;
+exports.PROXY_AUTHENTICATION_REQUIRED = 407;
+exports.REQUEST_TIMEOUT = 408;
+exports.CONFLICT = 409;
+exports.GONE = 410;
+exports.LENGTH_REQUIRED = 411;
+exports.PRECONDITION_FAILED = 412;
+exports.PAYLOAD_TOO_LARGE = 413;
+exports.URI_TOO_LONG = 414;
+exports.UNSUPPORTED_MEDIA_TYPE = 415;
+exports.RANGE_NOT_SATISFIABLE = 416;
+exports.EXPECTATION_FAILED = 417;
+exports.IAM_A_TEAPOT = 418;
+exports.MISDIRECTED_REQUEST = 421;
+exports.UNPROCESSABLE_ENTITY = 422;
+exports.LOCKED = 423;
+exports.FAILED_DEPENDENCY = 424;
+exports.TOO_EARLY = 425;
+exports.UPGRADE_REQUIERED = 426;
+exports.PRECONDITION_REQUIRED = 428;
+exports.TOO_MANY_REQUESTS = 429;
+exports.REQUEST_HEADER_FIELDS_TOO_LARGE = 431;
+exports.UNAVAILABLE_FOR_LEGAL_REASONS = 451;
+exports.INTERNAL_SERVER_ERROR = 500;
+exports.NOT_IMPLEMENTED = 501;
+exports.BAD_GATEWAY = 502;
+exports.SERVICE_UNAVAILABLE = 503;
+exports.GETWAY_TIMEOUT = 504;
+exports.HTTP_VERSION_NOT_SUPPORTED = 505;
+exports.VARIANT_ALSO_NEGOTIATES = 506;
+exports.INSUFFICIENT_STORAGE = 507;
+exports.LOOP_DETECTED = 508;
+exports.NOT_EXTENDED = 509;
+exports.NETWORK_AUTHENTICATION_REQUIRED = 511;
+
+// RFC
+
+module.exports.VALIDATE_PROVIDER_CALL = "ZRFC_ER_VALIDAR_PROVEEDOR";
