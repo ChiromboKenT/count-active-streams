@@ -1,20 +1,18 @@
 const { db: config } = require("../../../config");
 const mongoose = require("mongoose");
-const user = require("../entities/entity-user");
-
-mongoose.set("useFindAndModify", false);
+const user = require("../entities/user.entity");
+const logger = require("../../util/logging");
 
 let arrayConns = [],
   db = {};
-
+const uri = `mongodb+srv://${config.username}:${config.password}@cluster0.sc9c9.mongodb.net/?retryWrites=true&w=majority`;
 try {
-  mongoose.connect(`mongodb://${c.host}/${c.database}`);
-  db[c.nameconn] = {};
-  db[c.nameconn].conn = mongoose;
-  db[c.nameconn].User = user(mongoose);
+  mongoose.connect(uri);
+  db[config.nameconn] = {};
+  db[config.nameconn].conn = mongoose;
+  db[config.nameconn].User = user(mongoose);
 } catch (err) {
-  //TODO: ADD LOGGING LIBRARY
-  console.log(err);
+  logger.LogDanger(`Database connection failed: ${err}`);
   db = null;
 }
 
