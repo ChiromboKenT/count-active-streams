@@ -132,7 +132,7 @@ exports.GetUserStreams = async (req, res) => {
           } catch (err) {
             throw new Error(`Failed to add Device to active streams - ${err}`);
           }
-        message = "GetUserByID response successfull ";
+        message = "GetUserStreamByID response successfull ";
       }
     } else {
       status = httpCode.ERROR;
