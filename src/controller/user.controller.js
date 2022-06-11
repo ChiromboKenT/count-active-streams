@@ -8,8 +8,8 @@ const express = require("express"),
 console.log("[[ USERS ]]");
 logger.LogInfo("[GET] = /api/v1/users/:userID");
 
-router.get("/", users.GetAll);
-router.post("/", users.AddUser);
+router.get("/", users.GetAllUsers);
 router.get("/:userID", users.GetUserByID);
+router.post("/", users.AddUser);
 
 module.exports = router;

@@ -10,8 +10,7 @@ logger.LogInfo("[GET] = /api/v1/stream/");
 logger.LogInfo("[GET] = /api/v1/stream/:userID");
 logger.LogInfo("[GET] = /api/v1/stream/:userID/:deviceID");
 
-router.get("/", users.GetAll);
-router.get("/:userID", users.GetUserByID);
-router.get("/:userID/:deviceID", users.GetActiveDevices);
+// router.post(/:userID/, users.RemoveUserStream);
+router.get("/:userID/:deviceID", users.GetUserStreams);
 
 module.exports = router;

@@ -1,10 +1,19 @@
 const userAdapter = require("../adapter/user.adapter");
-const { isUuid } = require("uuidv4");
 const httpCode = require("../../util/http-enum");
+const { LogDanger } = require("../../util/logging");
 
 //TODO: ADD SUPPORT FOR MORE SERVICES
 //TODO: ADD FILTERING and PAGINATION
-exports.GetAll = async (req, res) => {
+
+/**
+ *
+ *
+ * @param {RequestObject} req - eg.Express request object from router
+ * @param {ResponseObject} res - eg.Express response object with response http response methods
+ * @returns Uses response methods to return JSON data to client.
+ */
+
+exports.GetAllUsers = async (req, res) => {
   let status = httpCode.SUCCESS,
     errorCode = null,
     data = "",
@@ -21,7 +30,10 @@ exports.GetAll = async (req, res) => {
       statusCode = httpCode.BAD_REQUEST;
     } else {
       statusCode = users.length > 0 ? httpCode.OK : httpCode.NO_CONTENT;
-      data = users;
+      data = users.map((user) => ({
+        ...user,
+        streamCount: user.activeStreams ? user.activeStreams.length : 0,
+      }));
 
       message = "GetAllUsers response successfull ";
     }
@@ -32,7 +44,7 @@ exports.GetAll = async (req, res) => {
       message,
     });
   } catch (err) {
-    console.log("err = ", err);
+    LogDanger(`err.GetAllUsers.service = ${err}`);
     return res.status(httpCode.INTERNAL_SERVER_ERROR).json({
       status: httpCode.ERROR,
       errorCode: httpCode.CRASH_LOGIC,
@@ -49,7 +61,8 @@ exports.GetUserByID = async (req, res) => {
 
   try {
     const { userID } = req.params;
-    if (!isUuid(userID)) throw new Error("UserID is not valid");
+
+    if (!userID) throw new Error("UserID is not valid");
     const user = await userAdapter.GetUserByID(userID);
 
     if (user) {
@@ -61,6 +74,7 @@ exports.GetUserByID = async (req, res) => {
       } else {
         statusCode = httpCode.OK;
         data = user;
+        data["streamCount"] = data.activeStreams.length;
         message = "GetUserByID response successfull ";
       }
     } else {
@@ -77,7 +91,64 @@ exports.GetUserByID = async (req, res) => {
       message,
     });
   } catch (err) {
-    console.log("err = ", err);
+    LogDanger(`err.GetUserByID.service = ${err}`);
+    return res.status(httpCode.INTERNAL_SERVER_ERROR).json({
+      status: httpCode.ERROR,
+      errorCode: httpCode.CRASH_LOGIC,
+      message: err,
+    });
+  }
+};
+
+exports.GetUserStreams = async (req, res) => {
+  let status = httpCode.SUCCESS,
+    errorCode = null,
+    data = "",
+    message = "";
+
+  try {
+    const { userID, deviceID } = req.params;
+    const maxStream = parseInt(req.query.maxStream) || 1;
+
+    if (!userID) throw new Error("UserID is not valid");
+    if (!deviceID) throw new Error("DeviceID is not valid");
+    const user = await userAdapter.GetUserByID(userID);
+
+    if (user) {
+      if (user.err) {
+        status = httpCode.ERROR;
+        errorCode = user.err.code;
+        message = user.err.message;
+        statusCode = httpCode.BAD_REQUEST;
+      } else {
+        statusCode = httpCode.OK;
+        data = user;
+        data["maxActiveStream"] = data.activeStreams.length >= maxStream;
+        data["streamCount"] = data.activeStreams.length;
+
+        if (data.activeStreams.length < maxStream)
+          try {
+            await userAdapter.UpdateBySubId(userID, deviceID);
+          } catch (err) {
+            throw new Error(`Failed to add Device to active streams - ${err}`);
+          }
+        message = "GetUserByID response successfull ";
+      }
+    } else {
+      status = httpCode.ERROR;
+      errorCode = httpCode.ID_NOT_FOUND;
+      message = "RESOURCE NOT FOUND";
+      statusCode = httpCode.NOT_FOUND;
+    }
+
+    return res.status(statusCode).json({
+      status,
+      data,
+      errorCode,
+      message,
+    });
+  } catch (err) {
+    LogDanger(`err.GetUserStreams.service = ${err}`);
     return res.status(httpCode.INTERNAL_SERVER_ERROR).json({
       status: httpCode.ERROR,
       errorCode: httpCode.CRASH_LOGIC,
@@ -116,7 +187,7 @@ exports.AddUser = async (req, res) => {
       message,
     });
   } catch (err) {
-    console.log("err = ", err);
+    LogDanger(`err.AddUser.service = ${err}`);
     return res.status(httpCode.INTERNAL_SERVER_ERROR).json({
       status: httpCode.ERROR,
       errorCode: httpCode.CRASH_LOGIC,
@@ -125,51 +196,4 @@ exports.AddUser = async (req, res) => {
   }
 };
 
-exports.GetActiveDevices = async (req, res) => {
-  let status = httpCode.SUCCESS,
-    errorCode = null,
-    data = "",
-    message = "";
-
-  try {
-    const { userID, streamID } = req.params;
-    if (!isUuid(userID)) throw new Error("UserID is not valid");
-    const user = await userAdapter.GetUserByID(userID);
-    if (user) {
-      if (user.err) {
-        status = httpCode.ERROR;
-        errorCode = user.err.code;
-        message = user.err.message;
-        statusCode = httpCode.BAD_REQUEST;
-      } else {
-        data = user;
-        data["maxActive"] = true;
-        data["deviceCount"] = user.activeStreams.length;
-        statusCode = httpCode.OK;
-        message = "GetUserByID response successfull ";
-        if (user.activeStreams.length < 2) {
-          data["maxActive"] = false;
-          userAdapter.UpdateById(userID, [...user.activeStreams, streamID]);
-        }
-      }
-    } else {
-      status = httpCode.ERROR;
-      errorCode = httpCode.ID_NOT_FOUND;
-      message = "RESOURCE NOT FOUND";
-      statusCode = httpCode.NOT_FOUND;
-    }
-
-    return res.status(statusCode).json({
-      status,
-      data,
-      errorCode,
-      message,
-    });
-  } catch (err) {
-    return res.status(httpCode.INTERNAL_SERVER_ERROR).json({
-      status: httpCode.ERROR,
-      errorCode: httpCode.CRASH_LOGIC,
-      message: `${("Error = ", err)}`,
-    });
-  }
-};
+//TODO: Add Remove Stream

@@ -1,44 +1,30 @@
 const { db } = require("../repositories/mongo.repository");
 const { v4: uuidv4 } = require("uuid");
 const { LogDanger } = require("../../util/logging");
+const { response } = require("express");
 const errorMessage = "Error orm-user.";
+
 exports.GetAllUsers = async () => {
   try {
-    await db.connMongo.User.find({ IsDelete: false }, { _id: 0, __v: 0 });
-
-    return await db.connMongo.User.aggregate(
-      [{ $addFields: { streamCount: { $size: "$activeStreams" } } }],
-      { _id: 0, __v: 0 }
-    );
-  } catch (err) {
-    LogDanger(`${errorMessage}.GetAllUsers = ${err}`);
-    return { err: { code: 123, message: err } };
-  }
-};
-exports.GetAllUserStreams = async (userID) => {
-  try {
-    const user = await db.connMongo.User.find(
+    return await db.connMongo.User.find(
       { IsDelete: false },
       { _id: 0, __v: 0 }
-    );
-    return user.activeStreams;
+    ).lean();
   } catch (err) {
-    LogDanger(`${errorMessage}.GetAllUserStreams = ${err}`);
+    LogDanger(`${errorMessage}.GetAllUsers = ${err}`);
     return { err: { code: 123, message: err } };
   }
 };
 
 exports.GetUserByID = async (userID) => {
   try {
-    await db.connMongo.User.findOne({
-      userID,
-      IsDelete: false,
-    });
-
-    return await db.connMongo.User.aggregate(
-      [{ $addFields: { streamCount: { $size: "$activeStreams" } } }],
+    return await db.connMongo.User.findOne(
+      {
+        userID,
+        IsDelete: false,
+      },
       { _id: 0, __v: 0 }
-    );
+    ).lean();
   } catch (err) {
     LogDanger(`${errorMessage}.GetUserByID = ${err}`);
     return { err: { code: 123, message: err } };
@@ -79,20 +65,40 @@ exports.DeleteById = async (userID) => {
     return { err: { code: 123, message: err } };
   }
 };
-
-exports.UpdateById = async (userID, activeStreams) => {
+exports.removeBySubId = async (userID, streamToRemove) => {
   try {
     await db.connMongo.User.findOneAndUpdate(
       {
         userID,
       },
+      { $pull: { activeStreams: { $elemMatch: streamToRemove } } }, // item(s) to match from array you want to pull/remove
+      { multi: true } // set this to true if you want to remove multiple elements.
+    );
+    return true;
+  } catch (err) {
+    LogDanger(`${errorMessage}.removeBySubId = ${err}`);
+    return { err: { code: 123, message: err } };
+  }
+};
+exports.UpdateBySubId = async (userID, streamToAdd) => {
+  try {
+    await db.connMongo.User.findOneAndUpdate(
       {
-        activeStreams,
+        userID,
+
+        activeStreams: {
+          $ne: [streamToAdd],
+        },
+      },
+      {
+        $addToSet: {
+          activeStreams: streamToAdd,
+        },
       }
     );
     return true;
   } catch (err) {
-    LogDanger(`${errorMessage}.UpdateById = ${err}`);
+    LogDanger(`${errorMessage}.UpdateBySubId = ${err}`);
     return { err: { code: 123, message: err } };
   }
 };
