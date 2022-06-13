@@ -19,14 +19,6 @@ services:
       options:
         awslogs-datetime-pattern: "NGINX"
 
-x-aws-logs_retention: 10
-x-aws-cloudformation:
-  Resources:
-    WebappTCP80TargetGroup:
-      Properties:
-        HealthCheckPath: /health
-        Matcher:
-          HttpCode: 200-499
 networks:
   default:
 volumes:

@@ -11,6 +11,10 @@
 
 ### 🏠 [Homepage](https://github.com/ChiromboKenT/count-active-streams#readme)
 
+## Reference architecture
+
+![Screenshot](screenshot.png)
+
 ## Prerequisites
 
 Download and install the latest version of Docker Desktop.
