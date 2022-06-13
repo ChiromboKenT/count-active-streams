@@ -56,9 +56,10 @@ If the installation was successful, you should be able to run the following comm
 
 ```
 
-## Usage Locally
 
-### Run Backend
+### Rename envcopy to .env
+
+## Usage Locally
 
 - Navigate to count-active-streams folder
 
