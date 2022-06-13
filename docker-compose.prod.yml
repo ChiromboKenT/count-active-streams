@@ -1,24 +1,33 @@
-version: "3.3"
+version: "3.8"
 services:
-  express-app:
+  stream-api:
+    image: tamken97/stream-api
     build:
-      context: .
       args:
         NODE_ENV: production
-    depends_on:
-      - mongo
     environment:
       - NODE_ENV=production
-  mongo:
-    image: mongo
-    container_name: "mongo"
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-    volumes:
-      - "./db/mongodb:/data/db"
-    ports:
-      - 27017:27017
+    deploy:
+      x-aws-autoscaling:
+        min: 1
+        max: 20 #required
+        cpu: 85
+        # mem: - mutualy exlusive with cpu
+  nginx:
+    image: tamken97/stream-api-nginx
+    logging:
+      options:
+        awslogs-datetime-pattern: "NGINX"
+
+x-aws-logs_retention: 10
+x-aws-cloudformation:
+  Resources:
+    WebappTCP80TargetGroup:
+      Properties:
+        HealthCheckPath: /health
+        Matcher:
+          HttpCode: 200-499
+networks:
+  default:
 volumes:
   db:

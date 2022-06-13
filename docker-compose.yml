@@ -1,26 +1,19 @@
-version: "3.3"
+version: "3.8"
 services:
   stream-api:
-    image: nginx-api
     build:
       context: ./
+      dockerfile: dockerfile
     restart: unless-stopped
     env_file:
       - ./.env
     volumes:
       - /usr/src/app/node_modules
-    networks:
-      - backend
 
   nginx:
     build:
-      dockerfile: dockerfile
       context: nginx
+      dockerfile: dockerfile
     restart: always
     ports:
       - "80:80"
-    networks:
-      - backend
-networks:
-  backend:
-    driver: bridge
