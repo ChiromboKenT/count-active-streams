@@ -15,9 +15,6 @@ services:
         # mem: - mutualy exlusive with cpu
   nginx:
     image: tamken97/stream-api-nginx
-    logging:
-      options:
-        awslogs-datetime-pattern: "NGINX"
 
 networks:
   default:
