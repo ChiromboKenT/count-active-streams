@@ -1,0 +1,15 @@
+PORT=5000
+DB_PORT=27017
+DB_NAME=connMongo
+DB_ENABLED=true
+
+
+#Dev
+DB_USERNAME=Ken_User1
+DB_PASSWORD=xvVB1LIel5gLs8TW
+DB_HOST=cluster0.sc9c9.mongodb.net              
+
+# Prod
+# DB_USERNAME=Ken_User1
+# DB_PASSWORD=xvVB1LIel5gLs8TW            
+# DB_HOST=mongo 

@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  stream-api:
+    image: tamken97/stream-api
+    build:
+      args:
+        NODE_ENV: production
+    environment:
+      - NODE_ENV=production
+    deploy:
+      x-aws-autoscaling:
+        min: 1
+        max: 20 #required
+        cpu: 85
+        # mem: - mutualy exlusive with cpu
+  nginx:
+    image: tamken97/stream-api-nginx
+
+networks:
+  default:
+volumes:
+  db:

@@ -1,0 +1,17 @@
+version: "3.3"
+services:
+  stream-api:
+    build:
+      context: ./
+      dockerfile: dockerfile
+    restart: unless-stopped
+    env_file:
+      - ./.env
+
+  nginx:
+    build:
+      context: nginx
+      dockerfile: dockerfile
+    restart: always
+    ports:
+      - "80:80"

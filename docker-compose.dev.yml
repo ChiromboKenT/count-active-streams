@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  stream-api:
+    build:
+      args:
+        NODE_ENV: "development"
+    container_name: api
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run dev

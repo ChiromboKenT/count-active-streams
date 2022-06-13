@@ -9,7 +9,12 @@ server.on("error", (err) => {
   console.error(err);
 });
 
+async function closeGracefully(signal) {
+  process.exit(1);
+}
 process.on("uncaughtException", (err) => {
   console.error("There was an uncaught error", err);
-  process.exit(1); // mandatory (as per the Node.js docs)
+  closeGracefully(); // mandatory (as per the Node.js docs)
 });
+
+process.on("SIGINT", closeGracefully);
