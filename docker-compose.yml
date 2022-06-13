@@ -1,4 +1,4 @@
-version: "3"
+version: "3.3"
 services:
   stream-api:
     image: nginx-api
@@ -11,10 +11,16 @@ services:
       - /usr/src/app/node_modules
     networks:
       - backend
-    depends_on:
-      - redis
+
+  nginx:
+    build:
+      dockerfile: dockerfile
+      context: nginx
+    restart: always
     ports:
-      - "5000:5000"
+      - "80:80"
+    networks:
+      - backend
 networks:
   backend:
     driver: bridge

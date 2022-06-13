@@ -5,7 +5,7 @@ ENV NODE_ENV ${NODE_ENV}
 
 WORKDIR /usr/src/app
 COPY --chown=node:node package*.json /usr/src/app
-
+RUN apk add dumb-init
 ARG NODE_ENV
 RUN if [ "${NODE_ENV}" = "development" ]; \
         then npm ci --also=dev; \

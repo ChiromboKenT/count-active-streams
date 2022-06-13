@@ -5,7 +5,7 @@ const logger = require("../../util/logging");
 
 let arrayConns = [],
   db = {};
-const uri = `mongodb+srv://${config.username}:${config.password}@cluster0.sc9c9.mongodb.net/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${config.username}:${config.password}@${config.host}/?retryWrites=true&w=majority`;
 try {
   mongoose.connect(uri);
   db[config.nameconn] = {};
