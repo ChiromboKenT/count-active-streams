@@ -88,6 +88,7 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 ### Requirements
 
     - Have an AWS Account
+    - Have AWS CLI v2 Installed
     - To ensure that Docker ECS integration is allowed to manage resources for your Compose application, you have to ensure your AWS credentials has at least the following permissions:
         application-autoscaling:*
         cloudformation:*
