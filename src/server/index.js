@@ -4,6 +4,7 @@ const cors = require("cors");
 const server = express();
 server.use(express.json());
 server.use(cors());
+console.log("server");
 
 require("../routes")(server);
 
