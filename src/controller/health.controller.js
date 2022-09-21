@@ -5,7 +5,8 @@ const express = require("express"),
   logger = require("../util/logging"),
   users = require("../domain/services/user.service");
 
-console.log("[[ HEALTH CHECK ]]");
+console.log("[[ HEALTH CHECKest ]]");
+console.log("My health");
 logger.LogInfo("[GET] = /");
 
 // router.post(/:userID/, users.RemoveUserStream);
