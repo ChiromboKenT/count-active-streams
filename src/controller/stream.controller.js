@@ -5,7 +5,7 @@ const express = require("express"),
   logger = require("../util/logging"),
   users = require("../domain/services/user.service");
 
-console.log("[[ STREAM ]]");
+console.log("[[ STREAM Checking]]");
 logger.LogInfo("[GET] = /api/v1/stream/");
 logger.LogInfo("[GET] = /api/v1/stream/:userID");
 logger.LogInfo("[GET] = /api/v1/stream/:userID/:deviceID");
